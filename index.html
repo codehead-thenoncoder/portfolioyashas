@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alex Chen - Full Stack Developer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .parallax-container {
+            height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+            perspective: 1px;
+        }
+
+        .parallax-element {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        .parallax-back {
+            transform: translateZ(-1px) scale(2);
+        }
+
+        .parallax-base {
+            transform: translateZ(0);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 120%;
+            height: 120%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 60%, rgba(255,255,255,0.05) 0%, transparent 50%),
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.03) 50%, transparent 70%),
+                linear-gradient(-45deg, transparent 30%, rgba(255,255,255,0.03) 50%, transparent 70%);
+            animation: shimmer 8s ease-in-out infinite;
+        }
+
+        .hero-content {
+            text-align: center;
+            color: white;
+            z-index: 2;
+            max-width: 800px;
+            padding: 0 2rem;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.5s forwards;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 1s forwards;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 1.5s forwards;
+        }
+
+        .cta-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .nav.visible {
+            transform: translateY(0);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        /* About Section */
+        .about {
+            padding: 8rem 2rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #e2e8f0 100%);
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            width: 100%;
+            overflow: visible;
+        }
+
+        .about-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at top left, rgba(102, 126, 234, 0.03) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom right, rgba(118, 75, 162, 0.03) 0%, transparent 50%);
+            animation: slide 15s linear infinite;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 4rem;
+            color: #1a202c;
+            text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8);
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #2d3748;
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        .skills {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        .skill {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .skill:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .skill:hover::before {
+            left: 100%;
+        }
+
+        .skill-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.4s ease;
+            display: inline-block;
+        }
+
+        .skill:hover .skill-icon {
+            transform: scale(1.2) rotate(10deg);
+            filter: drop-shadow(0 5px 10px rgba(102, 126, 234, 0.3));
+        }
+
+        /* HTML/CSS Globe Animation */
+        .skill:nth-child(1):hover .skill-icon { animation: revolve 1s ease; }
+        
+        /* JavaScript Lightning Animation */
+        .skill:nth-child(2):hover { animation: lightning 0.8s ease; }
+        .skill:nth-child(2):hover .skill-icon { animation: pulse 0.6s ease; }
+        
+        /* Java Coffee Toast Animation - Side View */
+        .skill:nth-child(3):hover { animation: steam 1s ease; }
+        .skill:nth-child(3):hover .skill-icon { 
+            animation: coffeeToastSide 1.2s ease; 
+        }
+        .skill:nth-child(3):hover::after {
+            content: '☕';
+            position: absolute;
+            top: 20%;
+            right: 10%;
+            font-size: 1.5rem;
+            animation: toastSlide 1.2s ease;
+        }
+        
+        /* Node.js Ball Drop Animation */
+        .skill:nth-child(4):hover { animation: grow 0.8s ease; }
+        .skill:nth-child(4):hover .skill-icon { animation: nodeStatic 0.5s ease; }
+        .skill:nth-child(4):hover::after {
+            content: '🟢';
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            animation: ballDrop 2s ease infinite;
+        }
+        
+        /* AWS Rain Animation - Water Accumulation */
+        .skill:nth-child(5):hover .skill-icon { animation: cloudRain 0.6s ease; }
+        .skill:nth-child(5):hover::before {
+            content: '💧💧💧';
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            animation: rainDrop 1.5s ease infinite;
+        }
+        .skill:nth-child(5):hover::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 0;
+            background: linear-gradient(to top, #4682B4, #87CEEB);
+            animation: waterAccumulate 2s ease forwards;
+            border-radius: 0 0 15px 15px;
+        }
+        
+        /* Flutter Phone Disappear + F Glow Animation */
+        .skill:nth-child(6):hover { animation: flutter 0.8s ease; }
+        .skill:nth-child(6):hover .skill-icon { 
+            animation: phoneDisappear 0.5s ease forwards; 
+        }
+        .skill:nth-child(6):hover::after {
+            content: 'F';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            font-weight: bold;
+            color: #2196F3;
+            animation: flutterGlowAppear 0.5s ease 0.5s forwards, flutterGlow 1s ease 1s infinite;
+            opacity: 0;
+        }
+        
+        /* SQL Database Dramatic Spill Animation */
+        .skill:nth-child(7):hover { animation: database 0.8s ease; }
+        .skill:nth-child(7):hover .skill-icon { animation: drawerOpenDramatic 1.5s ease; }
+        .skill:nth-child(7):hover::before {
+            content: '📄📄📄📋📋';
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            font-size: 1.2rem;
+            animation: filesSpillDramatic 2s ease;
+        }
+        .skill:nth-child(7):hover::after {
+            content: '📊📋📄';
+            position: absolute;
+            bottom: 10%;
+            right: 10%;
+            font-size: 1.2rem;
+            animation: filesSpillDramatic 2s ease 0.5s;
+        }
+        
+        /* Networking Links Spread Animation */
+        .skill:nth-child(8):hover { animation: network 1s ease; }
+        .skill:nth-child(8):hover .skill-icon { animation: spin 0.6s ease; }
+        .skill:nth-child(8):hover::before {
+            content: '🔗';
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            font-size: 1rem;
+            animation: linkSpread1 1s ease;
+        }
+        .skill:nth-child(8):hover::after {
+            content: '🔗🔗';
+            position: absolute;
+            bottom: 10%;
+            right: 10%;
+            font-size: 0.8rem;
+            animation: linkSpread2 1s ease 0.2s;
+        }
+
+        /* Projects Section */
+        .projects {
+            padding: 8rem 2rem;
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 50%, #4a5568 100%);
+            color: white;
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+        }
+
+        .projects-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(240, 147, 251, 0.1) 0%, transparent 70%),
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="hexagon" width="30" height="26" patternUnits="userSpaceOnUse"><polygon points="15,2 25,8 25,18 15,24 5,18 5,8" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23hexagon)"/></svg>');
+            animation: rotate 30s linear infinite;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+
+        .project-description {
+            color: #cbd5e0;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tech-tag {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .project-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .project-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .project-link:hover {
+            color: #764ba2;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 8rem 2rem;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #ff6b6b 100%);
+            color: white;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+        }
+
+        .contact::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 70%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="waves" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M0,20 Q10,10 20,20 T40,20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23waves)"/></svg>');
+            animation: wave 12s ease-in-out infinite;
+        }
+
+        .contact-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .contact-link {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .contact-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(1deg); }
+        }
+
+        @keyframes slide {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: translateX(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Skill Icon Animations */
+        @keyframes revolve {
+            0% { transform: scale(1.2) rotate(0deg); }
+            100% { transform: scale(1.2) rotate(360deg); }
+        }
+
+        @keyframes lightning {
+            0%, 100% { box-shadow: 0 0 5px rgba(255, 255, 0, 0.3); }
+            25% { box-shadow: 0 0 20px rgba(255, 255, 0, 0.8), 0 0 30px rgba(255, 255, 0, 0.6); }
+            50% { box-shadow: 0 0 40px rgba(255, 255, 0, 1), 0 0 60px rgba(255, 255, 0, 0.8); }
+            75% { box-shadow: 0 0 20px rgba(255, 255, 0, 0.8), 0 0 30px rgba(255, 255, 0, 0.6); }
+        }
+
+        @keyframes steam {
+            0%, 100% { box-shadow: 0 0 10px rgba(139, 69, 19, 0.3); }
+            50% { box-shadow: 0 0 25px rgba(139, 69, 19, 0.6), 0 -10px 20px rgba(255, 255, 255, 0.4); }
+        }
+
+        @keyframes grow {
+            0%, 100% { box-shadow: 0 0 10px rgba(76, 175, 80, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(76, 175, 80, 0.8), 0 0 50px rgba(76, 175, 80, 0.4); }
+        }
+
+        @keyframes cloudFloat {
+            0%, 100% { box-shadow: 0 0 15px rgba(255, 152, 0, 0.3); }
+            50% { box-shadow: 0 0 35px rgba(255, 152, 0, 0.7), 0 5px 25px rgba(255, 152, 0, 0.4); }
+        }
+
+        @keyframes flutter {
+            0%, 100% { box-shadow: 0 0 10px rgba(2, 136, 209, 0.3); }
+            25% { box-shadow: 0 0 20px rgba(2, 136, 209, 0.6), -5px 0 15px rgba(2, 136, 209, 0.4); }
+            75% { box-shadow: 0 0 20px rgba(2, 136, 209, 0.6), 5px 0 15px rgba(2, 136, 209, 0.4); }
+        }
+
+        @keyframes database {
+            0%, 100% { box-shadow: 0 0 10px rgba(33, 150, 243, 0.3); }
+            50% { box-shadow: 0 0 25px rgba(33, 150, 243, 0.8), 0 0 40px rgba(33, 150, 243, 0.4); }
+        }
+
+        @keyframes network {
+            0%, 100% { box-shadow: 0 0 10px rgba(156, 39, 176, 0.3); }
+            33% { box-shadow: 5px 0 15px rgba(156, 39, 176, 0.6), 0 0 20px rgba(156, 39, 176, 0.4); }
+            66% { box-shadow: -5px 0 15px rgba(156, 39, 176, 0.6), 0 0 20px rgba(156, 39, 176, 0.4); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1.2) rotate(10deg); }
+            50% { transform: scale(1.4) rotate(10deg); }
+            100% { transform: scale(1.2) rotate(10deg); }
+        }
+
+        @keyframes coffeeToastSide {
+            0% { transform: scale(1.2) rotate(10deg); }
+            30% { transform: scale(1.2) rotate(-15deg) translateX(-10px); }
+            60% { transform: scale(1.2) rotate(5deg) translateX(5px); }
+            100% { transform: scale(1.2) rotate(10deg); }
+        }
+
+        @keyframes toastSlide {
+            0% { opacity: 0; transform: translateX(20px) rotate(0deg); }
+            50% { opacity: 1; transform: translateX(0px) rotate(-10deg); }
+            100% { opacity: 0; transform: translateX(-20px) rotate(-20deg); }
+        }
+
+        @keyframes nodeStatic {
+            0%, 100% { transform: scale(1.2) rotate(10deg); }
+        }
+
+        @keyframes ballDrop {
+            0% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(60px); }
+            50% { transform: translateX(-50%) translateY(50px); }
+            60% { transform: translateX(-50%) translateY(60px); }
+            70% { transform: translateX(-50%) translateY(55px); }
+            80% { transform: translateX(-50%) translateY(60px); }
+            90% { transform: translateX(-50%) translateY(58px); }
+            100% { transform: translateX(-50%) translateY(60px); }
+        }
+
+        @keyframes waterAccumulate {
+            0% { height: 0; }
+            100% { height: 30%; }
+        }
+
+        @keyframes cloudRain {
+            0%, 100% { transform: scale(1.2) rotate(10deg); }
+            50% { transform: scale(1.3) rotate(10deg) translateY(-5px); }
+        }
+
+        @keyframes rainDrop {
+            0% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+            50% { opacity: 1; transform: translateX(-50%) translateY(20px); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(50px); }
+        }
+
+        @keyframes phoneDisappear {
+            0% { opacity: 1; transform: scale(1.2) rotate(10deg); }
+            100% { opacity: 0; transform: scale(0.5) rotate(10deg); }
+        }
+
+        @keyframes flutterGlowAppear {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        @keyframes flutterGlow {
+            0%, 100% { opacity: 0.7; text-shadow: 0 0 10px #2196F3; }
+            50% { opacity: 1; text-shadow: 0 0 20px #2196F3, 0 0 30px #2196F3; }
+        }
+
+        @keyframes drawerOpenDramatic {
+            0% { transform: scale(1.2) rotate(10deg); }
+            20% { transform: scale(1.1) rotate(5deg) translateX(-8px); }
+            40% { transform: scale(1.4) rotate(20deg) translateX(8px); }
+            60% { transform: scale(1.2) rotate(-5deg) translateX(-5px); }
+            80% { transform: scale(1.3) rotate(15deg) translateX(5px); }
+            100% { transform: scale(1.2) rotate(10deg); }
+        }
+
+        @keyframes filesSpillDramatic {
+            0% { opacity: 0; transform: translateY(0) rotate(0deg) scale(0.5); }
+            25% { opacity: 1; transform: translateY(-20px) rotate(45deg) scale(1.2); }
+            50% { opacity: 1; transform: translateY(-15px) rotate(90deg) scale(1); }
+            75% { opacity: 0.8; transform: translateY(10px) rotate(135deg) scale(0.8); }
+            100% { opacity: 0; transform: translateY(40px) rotate(180deg) scale(0.3); }
+        }
+
+        @keyframes linkSpread1 {
+            0% { opacity: 0; transform: scale(0.5) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1.2) rotate(180deg); }
+            100% { opacity: 0; transform: scale(0.8) rotate(360deg); }
+        }
+
+        @keyframes linkSpread2 {
+            0% { opacity: 0; transform: scale(0.3) translateX(0) translateY(0); }
+            50% { opacity: 1; transform: scale(1) translateX(-15px) translateY(-15px); }
+            100% { opacity: 0; transform: scale(0.5) translateX(-30px) translateY(-30px); }
+        }
+
+        @keyframes spin {
+            0% { transform: scale(1.2) rotate(10deg); }
+            100% { transform: scale(1.2) rotate(370deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1.2rem; }
+            .section-title { font-size: 2rem; }
+            .about-content { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+            .contact-links { flex-direction: column; align-items: center; }
+        }
+
+        /* Mouse Trail */
+        .mouse-trail {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(102,126,234,0.7) 50%, transparent 100%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(102, 126, 234, 0.2);
+            z-index: 1001;
+        }
+
+        .scroll-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="scroll-indicator">
+        <div class="scroll-progress" id="scrollProgress"></div>
+    </div>
+
+    <nav class="nav" id="navbar">
+        <div class="nav-content">
+            <div class="logo">Yashas. T</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero" id="home">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <h1>Yashas. T</h1>
+            <p>Innovative Front-End Developer & Cloud Architect</p>
+            <a href="#projects" class="cta-button">View My Work</a>
+        </div>
+    </section>
+
+    <section class="about" id="about">
+        <div class="about-bg"></div>
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>I'm an innovative front-end developer with a knack for creating visually stunning and user-friendly interfaces. Currently working as a Website Developer and Cloud Architect at Acuity Groups, where I've increased user engagement by 40% and reduced page load times by 25%.</p>
+                    <p>Based in Bangalore, I'm passionate about delivering seamless web experiences and continuously learning new technologies. I speak 6 languages and love bringing digital projects to life through creative problem-solving and technical expertise.</p>
+                </div>
+                <div class="skills">
+                    <div class="skill">
+                        <div class="skill-icon">🌐</div>
+                        <div>HTML/CSS</div>
+                    </div>
+                    <div class="skill">
+                        <div class="skill-icon">⚡</div>
+                        <div>JavaScript</div>
+                    </div>
+                    <div class="skill">
+                        <div class="skill-icon">🍵</div>
+                        <div>Java</div>
+                    </div>
+                    <div class="skill">
+                        <div class="skill-icon">🟢</div>
+                        <div>Node.js</div>
+                    </div>
+                    <div class="skill">
+                        <div class="skill-icon">☁️</div>
+                        <div>AWS</div>
+                    </div>
+                    <div class="skill">
+                        <div class="skill-icon">📱</div>
+                        <div>Flutter</div>
+                    </div>
+                    <div class="skill">
+                        <div class="skill-icon">🗄️</div>
+                        <div>SQL</div>
+                    </div>
+                    <div class="skill">
+                        <div class="skill-icon">🔗</div>
+                        <div>Networking</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="projects" id="projects">
+        <div class="projects-bg"></div>
+        <div class="container">
+            <h2 class="section-title">Featured Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <h3 class="project-title">3Nex E-commerce Platform</h3>
+                    <p class="project-description">Designed and maintained the complete e-commerce website for 3Nex Global India. Developed responsive UI/UX for both web and mobile applications with seamless user experience.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">HTML</span>
+                        <span class="tech-tag">CSS</span>
+                        <span class="tech-tag">JavaScript</span>
+                        <span class="tech-tag">Flutter</span>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <h3 class="project-title">RTO DL Management System</h3>
+                    <p class="project-description">An online platform to manage all RTO functions from home, eliminating the need to visit offices. Features include license applications, renewals, and document management.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">HTML</span>
+                        <span class="tech-tag">CSS</span>
+                        <span class="tech-tag">JavaScript</span>
+                        <span class="tech-tag">PHP</span>
+                        <span class="tech-tag">SQL</span>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <h3 class="project-title">Online Loan Approval System</h3>
+                    <p class="project-description">A comprehensive banking solution for loan applications with instant approval capabilities. Users can apply for loans and get approved within minutes from the comfort of their homes.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">JavaScript</span>
+                        <span class="tech-tag">AngularJS</span>
+                        <span class="tech-tag">PHP</span>
+                        <span class="tech-tag">MySQL</span>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <h3 class="project-title">Acuity Groups Website</h3>
+                    <p class="project-description">Developed and architected the company website with AWS hosting. Revamped architecture, integrated new features, increased user engagement by 40% and reduced page load time by 25%.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">HTML</span>
+                        <span class="tech-tag">CSS</span>
+                        <span class="tech-tag">JavaScript</span>
+                        <span class="tech-tag">AWS</span>
+                        <span class="tech-tag">NoSQL</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="contact-content">
+                <h2 class="section-title">Let's Work Together</h2>
+                <p>Based in Bangalore, I'm seeking opportunities to develop and apply my skills in a growth-oriented industry. Let's collaborate and bring your digital projects to life! Whether you have a question or want to discuss a project, feel free to reach out.</p>
+                <div class="contact-links">
+                    <a href="mailto:yashas1811@gmail.com" class="contact-link">📧 yashas1811@gmail.com</a>
+                    <a href="tel:+919343431901" class="contact-link">📱 +91 9343431901</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Show/hide navigation on scroll
+        let lastScrollTop = 0;
+        const navbar = document.getElementById('navbar');
+        
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > 100) {
+                navbar.classList.add('visible');
+            } else {
+                navbar.classList.remove('visible');
+            }
+            
+            lastScrollTop = scrollTop;
+        });
+
+        // Scroll progress indicator
+        window.addEventListener('scroll', () => {
+            const scrollProgress = document.getElementById('scrollProgress');
+            const scrollTop = document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrollPercentage = (scrollTop / scrollHeight) * 100;
+            scrollProgress.style.width = scrollPercentage + '%';
+        });
+
+        // Parallax effect for background elements
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallaxElements = document.querySelectorAll('.hero-bg, .about-bg, .projects-bg');
+            
+            parallaxElements.forEach((element, index) => {
+                const speed = 0.3 + (index * 0.1);
+                const yPos = -(scrolled * speed);
+                element.style.transform = `translateY(${yPos}px)`;
+            });
+        });
+
+        // Section reveal animation on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.about, .projects, .contact');
+            const scrollTop = window.pageYOffset;
+            const windowHeight = window.innerHeight;
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                
+                if (scrollTop + windowHeight > sectionTop + 100) {
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for animation
+        document.querySelectorAll('.project-card, .skill').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Add hover effects to project cards
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Typing effect for hero text (optional enhancement)
+        function typeWriter(element, text, speed = 100) {
+            let i = 0;
+            element.innerHTML = '';
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        // Initialize typing effect after page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const heroTitle = document.querySelector('.hero h1');
+                if (heroTitle) {
+                    typeWriter(heroTitle, 'Yashas. T', 150);
+                }
+            }, 1000);
+        });
+
+        // Mouse Trail Effect
+        const trailElements = [];
+        const maxTrailLength = 12;
+
+        // Create trail elements
+        for (let i = 0; i < maxTrailLength; i++) {
+            const trail = document.createElement('div');
+            trail.className = 'mouse-trail';
+            trail.style.opacity = (1 - i / maxTrailLength) * 0.8;
+            trail.style.transform = `scale(${1 - i / maxTrailLength * 0.5})`;
+            document.body.appendChild(trail);
+            trailElements.push({
+                element: trail,
+                x: 0,
+                y: 0
+            });
+        }
+
+        let mouseX = 0;
+        let mouseY = 0;
+
+        // Track mouse movement
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        // Animate trail
+        function animateTrail() {
+            let currentX = mouseX;
+            let currentY = mouseY;
+
+            trailElements.forEach((trail, index) => {
+                const targetX = currentX;
+                const targetY = currentY;
+                
+                // Smooth interpolation for trail effect
+                trail.x += (targetX - trail.x) * (0.3 - index * 0.02);
+                trail.y += (targetY - trail.y) * (0.3 - index * 0.02);
+                
+                trail.element.style.left = trail.x - 4 + 'px';
+                trail.element.style.top = trail.y - 4 + 'px';
+                
+                currentX = trail.x;
+                currentY = trail.y;
+            });
+
+            requestAnimationFrame(animateTrail);
+        }
+
+        // Start trail animation
+        animateTrail();
+
+        // Hide trail when mouse leaves window
+        document.addEventListener('mouseleave', () => {
+            trailElements.forEach(trail => {
+                trail.element.style.opacity = '0';
+            });
+        });
+
+        // Show trail when mouse enters window
+        document.addEventListener('mouseenter', () => {
+            trailElements.forEach((trail, index) => {
+                trail.element.style.opacity = (1 - index / maxTrailLength) * 0.8;
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96e66addb5893d2f',t:'MTc1NTA2OTI4Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
